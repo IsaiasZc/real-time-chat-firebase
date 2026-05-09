@@ -1,4 +1,5 @@
 import { register, login, logout, onAuthChange } from './auth.js'
+import { createUserProfile } from './db.js'
 
 const authView = document.getElementById('auth-view')
 const appView = document.getElementById('app-view')
@@ -53,7 +54,8 @@ registerBtn.addEventListener('click', async () => {
   if (!email || !password) return
   setLoading(registerBtn, true)
   try {
-    await register(email, password)
+    const { user } = await register(email, password)
+    await createUserProfile(user.uid, { email: user.email })
   } catch (err) {
     showError(err.code)
   } finally {
