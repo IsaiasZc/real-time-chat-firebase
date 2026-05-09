@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Firebase Chat</title>
+    <style>
+      body { font-family: sans-serif; max-width: 400px; margin: 60px auto; padding: 0 16px; }
+      input { display: block; width: 100%; margin-bottom: 8px; padding: 8px; box-sizing: border-box; }
+      button { margin-right: 8px; padding: 8px 16px; cursor: pointer; }
+      #error-msg { color: red; margin-top: 8px; font-size: 14px; }
+      #app-view { display: none; }
+    </style>
+  </head>
+  <body>
+    <div id="auth-view">
+      <h2>Firebase Chat</h2>
+      <input id="email" type="email" placeholder="Email" />
+      <input id="password" type="password" placeholder="Contraseña" />
+      <button id="btn-login">Login</button>
+      <button id="btn-register">Registrar</button>
+      <p id="error-msg"></p>
+    </div>
+
+    <div id="app-view">
+      <p>Bienvenido, <strong id="user-display"></strong></p>
+      <button id="btn-logout">Cerrar sesión</button>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
