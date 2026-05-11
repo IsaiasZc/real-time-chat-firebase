@@ -5,11 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Firebase Chat</title>
     <style>
-      body { font-family: sans-serif; max-width: 400px; margin: 60px auto; padding: 0 16px; }
+      body { font-family: sans-serif; max-width: 500px; margin: 40px auto; padding: 0 16px; }
       input { display: block; width: 100%; margin-bottom: 8px; padding: 8px; box-sizing: border-box; }
       button { margin-right: 8px; padding: 8px 16px; cursor: pointer; }
       #error-msg { color: red; margin-top: 8px; font-size: 14px; }
       #app-view { display: none; }
+      #uid-display { font-size: 11px; color: #888; word-break: break-all; }
+      #messages-list { height: 220px; overflow-y: auto; border: 1px solid #ccc; padding: 8px; margin-bottom: 8px; background: #fafafa; }
+      #chat-section { display: none; margin-top: 16px; }
+      .msg-row { margin-bottom: 6px; }
+      .msg-own { text-align: right; }
+      .msg-other { text-align: left; }
+      .bubble { display: inline-block; padding: 5px 10px; border-radius: 12px; font-size: 14px; }
+      .bubble-own { background: #007bff; color: #fff; }
+      .bubble-other { background: #e0e0e0; color: #000; }
+      #send-row { display: flex; gap: 8px; }
+      #send-row input { margin: 0; flex: 1; }
+      hr { margin: 16px 0; }
     </style>
   </head>
   <body>
@@ -24,7 +36,26 @@
 
     <div id="app-view">
       <p>Bienvenido, <strong id="user-display"></strong></p>
+      <p id="uid-display"></p>
       <button id="btn-logout">Cerrar sesión</button>
+
+      <hr />
+
+      <div>
+        <h3>Iniciar chat</h3>
+        <input id="other-uid" type="text" placeholder="UID del otro usuario" />
+        <button id="btn-start-chat">Abrir chat</button>
+      </div>
+
+      <div id="chat-section">
+        <hr />
+        <h3 id="chat-title">Mensajes</h3>
+        <div id="messages-list"></div>
+        <div id="send-row">
+          <input id="message-input" type="text" placeholder="Escribe un mensaje..." />
+          <button id="btn-send">Enviar</button>
+        </div>
+      </div>
     </div>
 
     <script type="module" src="/src/main.js"></script>
