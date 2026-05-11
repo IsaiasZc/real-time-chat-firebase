@@ -1,0 +1,17 @@
+      body { font-family: sans-serif; max-width: 500px; margin: 40px auto; padding: 0 16px; }
+      input { display: block; width: 100%; margin-bottom: 8px; padding: 8px; box-sizing: border-box; }
+      button { margin-right: 8px; padding: 8px 16px; cursor: pointer; }
+      #error-msg { color: red; margin-top: 8px; font-size: 14px; }
+      #app-view { display: none; }
+      #uid-display { font-size: 11px; color: #888; word-break: break-all; }
+      #messages-list { height: 220px; overflow-y: auto; border: 1px solid #ccc; padding: 8px; margin-bottom: 8px; background: #fafafa; }
+      #chat-section { display: none; margin-top: 16px; }
+      .msg-row { margin-bottom: 6px; }
+      .msg-own { text-align: right; }
+      .msg-other { text-align: left; }
+      .bubble { display: inline-block; padding: 5px 10px; border-radius: 12px; font-size: 14px; }
+      .bubble-own { background: #007bff; color: #fff; }
+      .bubble-other { background: #e0e0e0; color: #000; }
+      #send-row { display: flex; gap: 8px; }
+      #send-row input { margin: 0; flex: 1; }
+      hr { margin: 16px 0; }
