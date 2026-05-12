@@ -11,8 +11,8 @@ service cloud.firestore {
     }
 
     match /chats/{chatId} {
-      // Only members can read or update a chat
-      allow read: if request.auth != null && request.auth.uid in resource.data.members;
+      // resource == null means doc doesn't exist yet (getDoc check in createChat)
+      allow read: if request.auth != null && (resource == null || request.auth.uid in resource.data.members);
       // Creator must include themselves in members array
       allow create: if request.auth != null && request.auth.uid in request.resource.data.members;
       allow update: if request.auth != null && request.auth.uid in resource.data.members;

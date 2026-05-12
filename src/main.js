@@ -1,22 +1,22 @@
+// App flow:
+// 1. Load → onAuthChange fires
+// 2. No user → showAuthView()
+// 3. User logged in → showChatView() → sidebar ready
+// 4. Enter UID → createChat → listenMessages → appendMessage
+// 5. sendMessage → Firestore → onSnapshot → UI updates
+
 import { register, login, logout, onAuthChange } from './auth.js'
 import { createUserProfile, createChat, sendMessage, listenMessages } from './db.js'
+import { showAuthView, showChatView, setUserInfo, showMessages, hideMessages, appendMessage, clearMessages } from './ui.js'
 
-const authView = document.getElementById('auth-view')
-const appView = document.getElementById('app-view')
 const emailInput = document.getElementById('email')
 const passwordInput = document.getElementById('password')
 const loginBtn = document.getElementById('btn-login')
 const registerBtn = document.getElementById('btn-register')
 const logoutBtn = document.getElementById('btn-logout')
-const userDisplay = document.getElementById('user-display')
-const uidDisplay = document.getElementById('uid-display')
 const errorMsg = document.getElementById('error-msg')
-
 const otherUidInput = document.getElementById('other-uid')
 const startChatBtn = document.getElementById('btn-start-chat')
-const chatSection = document.getElementById('chat-section')
-const chatTitle = document.getElementById('chat-title')
-const messagesList = document.getElementById('messages-list')
 const messageInput = document.getElementById('message-input')
 const sendBtn = document.getElementById('btn-send')
 
@@ -93,25 +93,16 @@ startChatBtn.addEventListener('click', async () => {
   if (!otherUid || !currentUser) return
 
   stopListening()
-  messagesList.innerHTML = ''
+  clearMessages()
 
   activeChatId = await createChat(currentUser.uid, otherUid)
-  chatTitle.textContent = `Chat: ${activeChatId}`
-  chatSection.style.display = 'block'
+  showMessages(activeChatId)
 
   unsubscribeMessages = listenMessages(activeChatId, (messages) => {
-    messagesList.innerHTML = ''
+    clearMessages()
     messages.forEach(msg => {
-      const isOwn = msg.senderId === currentUser.uid
-      const row = document.createElement('div')
-      row.className = `msg-row ${isOwn ? 'msg-own' : 'msg-other'}`
-      const bubble = document.createElement('span')
-      bubble.className = `bubble ${isOwn ? 'bubble-own' : 'bubble-other'}`
-      bubble.textContent = msg.text
-      row.appendChild(bubble)
-      messagesList.appendChild(row)
+      appendMessage(msg.text, msg.senderId === currentUser.uid)
     })
-    messagesList.scrollTop = messagesList.scrollHeight
   })
 })
 
@@ -129,15 +120,12 @@ messageInput.addEventListener('keydown', (e) => {
 onAuthChange((user) => {
   currentUser = user
   if (user) {
-    authView.style.display = 'none'
-    appView.style.display = 'block'
-    userDisplay.textContent = user.email
-    uidDisplay.textContent = `UID: ${user.uid}`
-    chatSection.style.display = 'none'
+    setUserInfo(user.email)
+    showChatView()
     stopListening()
+    hideMessages()
   } else {
-    authView.style.display = 'block'
-    appView.style.display = 'none'
+    showAuthView()
     stopListening()
   }
 })

@@ -8,36 +8,44 @@
   </head>
   <body>
     <div id="auth-view">
-      <h2>Firebase Chat</h2>
-      <input id="email" type="email" placeholder="Email" />
-      <input id="password" type="password" placeholder="Contraseña" />
-      <button id="btn-login">Login</button>
-      <button id="btn-register">Registrar</button>
-      <p id="error-msg"></p>
+      <div class="auth-card">
+        <h2>Firebase Chat</h2>
+        <input id="email" type="email" placeholder="Email" />
+        <input id="password" type="password" placeholder="Contraseña" />
+        <div class="auth-buttons">
+          <button id="btn-login">Entrar</button>
+          <button id="btn-register">Registrar</button>
+        </div>
+        <p id="error-msg"></p>
+      </div>
     </div>
 
-    <div id="app-view">
-      <p>Bienvenido, <strong id="user-display"></strong></p>
-      <p id="uid-display"></p>
-      <button id="btn-logout">Cerrar sesión</button>
-
-      <hr />
-
-      <div>
-        <h3>Iniciar chat</h3>
-        <input id="other-uid" type="text" placeholder="UID del otro usuario" />
-        <button id="btn-start-chat">Abrir chat</button>
-      </div>
-
-      <div id="chat-section">
-        <hr />
-        <h3 id="chat-title">Mensajes</h3>
-        <div id="messages-list"></div>
-        <div id="send-row">
-          <input id="message-input" type="text" placeholder="Escribe un mensaje..." />
-          <button id="btn-send">Enviar</button>
+    <div id="chat-view">
+      <aside id="sidebar">
+        <div id="user-info">
+          <span id="user-display"></span>
+          <button id="btn-logout">Salir</button>
         </div>
-      </div>
+        <div id="start-chat">
+          <input id="other-uid" type="text" placeholder="UID del otro usuario" />
+          <button id="btn-start-chat">Abrir</button>
+        </div>
+        <div id="chats-list"></div>
+      </aside>
+
+      <main id="main-panel">
+        <div id="empty-state">Selecciona una conversación</div>
+        <div id="chat-section">
+          <div id="chat-header">
+            <span id="chat-title"></span>
+          </div>
+          <div id="messages-list"></div>
+          <div id="send-row">
+            <input id="message-input" type="text" placeholder="Escribe un mensaje..." />
+            <button id="btn-send">Enviar</button>
+          </div>
+        </div>
+      </main>
     </div>
 
     <script type="module" src="/src/main.js"></script>
