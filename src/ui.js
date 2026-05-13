@@ -5,6 +5,8 @@ const emptyState = document.getElementById('empty-state')
 const chatSection = document.getElementById('chat-section')
 const chatTitle = document.getElementById('chat-title')
 const messagesList = document.getElementById('messages-list')
+const usersList = document.getElementById('users-list')
+const chatsList = document.getElementById('chats-list')
 
 export function showAuthView() {
   authView.style.display = 'flex'
@@ -20,10 +22,10 @@ export function setUserInfo(email) {
   userDisplay.textContent = email
 }
 
-export function showMessages(chatId) {
+export function showMessages(title) {
   emptyState.style.display = 'none'
   chatSection.style.display = 'flex'
-  chatTitle.textContent = chatId
+  chatTitle.textContent = title
 }
 
 export function hideMessages() {
@@ -45,4 +47,42 @@ export function appendMessage(text, isOwn) {
 
 export function clearMessages() {
   messagesList.innerHTML = ''
+}
+
+export function renderUserList(users, currentUid, onSelect) {
+  usersList.innerHTML = ''
+  users
+    .filter(u => u.uid !== currentUid)
+    .forEach(user => {
+      const item = document.createElement('div')
+      item.className = 'user-item'
+      item.textContent = user.displayName || user.email
+      item.addEventListener('click', () => onSelect(user))
+      usersList.appendChild(item)
+    })
+}
+
+export function renderChatList(chats, userMap, currentUid, onSelect) {
+  chatsList.innerHTML = ''
+  chats.forEach(chat => {
+    const otherUid = chat.members.find(uid => uid !== currentUid)
+    const otherUser = userMap[otherUid]
+    const name = otherUser?.displayName || otherUser?.email || otherUid
+
+    const item = document.createElement('div')
+    item.className = 'chat-item'
+
+    const nameEl = document.createElement('div')
+    nameEl.className = 'chat-item-name'
+    nameEl.textContent = name
+
+    const lastEl = document.createElement('div')
+    lastEl.className = 'chat-item-last'
+    lastEl.textContent = chat.lastMessage || 'Sin mensajes'
+
+    item.appendChild(nameEl)
+    item.appendChild(lastEl)
+    item.addEventListener('click', () => onSelect(chat, name))
+    chatsList.appendChild(item)
+  })
 }

@@ -1,13 +1,13 @@
 // App flow:
 // 1. Load → onAuthChange fires
 // 2. No user → showAuthView()
-// 3. User logged in → showChatView() → sidebar ready
-// 4. Enter UID → createChat → listenMessages → appendMessage
+// 3. User logged in → showChatView() → load users + listen chats
+// 4. Click user → getOrCreateChat → listenMessages → appendMessage
 // 5. sendMessage → Firestore → onSnapshot → UI updates
 
 import { register, login, logout, onAuthChange } from './auth.js'
-import { createUserProfile, createChat, sendMessage, listenMessages } from './db.js'
-import { showAuthView, showChatView, setUserInfo, showMessages, hideMessages, appendMessage, clearMessages } from './ui.js'
+import { createUserProfile, getAllUsers, getOrCreateChat, listenUserChats, sendMessage, listenMessages } from './db.js'
+import { showAuthView, showChatView, setUserInfo, showMessages, hideMessages, appendMessage, clearMessages, renderUserList, renderChatList } from './ui.js'
 
 const emailInput = document.getElementById('email')
 const passwordInput = document.getElementById('password')
@@ -15,8 +15,6 @@ const loginBtn = document.getElementById('btn-login')
 const registerBtn = document.getElementById('btn-register')
 const logoutBtn = document.getElementById('btn-logout')
 const errorMsg = document.getElementById('error-msg')
-const otherUidInput = document.getElementById('other-uid')
-const startChatBtn = document.getElementById('btn-start-chat')
 const messageInput = document.getElementById('message-input')
 const sendBtn = document.getElementById('btn-send')
 
@@ -43,13 +41,35 @@ function setLoading(btn, loading) {
 
 let currentUser = null
 let activeChatId = null
+let userMap = {}
 let unsubscribeMessages = null
+let unsubscribeChats = null
 
-function stopListening() {
+function stopListeningMessages() {
   if (unsubscribeMessages) {
     unsubscribeMessages()
     unsubscribeMessages = null
   }
+}
+
+function stopListeningChats() {
+  if (unsubscribeChats) {
+    unsubscribeChats()
+    unsubscribeChats = null
+  }
+}
+
+function openChat(chatId, title) {
+  stopListeningMessages()
+  clearMessages()
+  activeChatId = chatId
+  showMessages(title)
+  unsubscribeMessages = listenMessages(chatId, (messages) => {
+    clearMessages()
+    messages.forEach(msg => {
+      appendMessage(msg.text, msg.senderId === currentUser.uid)
+    })
+  })
 }
 
 loginBtn.addEventListener('click', async () => {
@@ -84,26 +104,9 @@ registerBtn.addEventListener('click', async () => {
 })
 
 logoutBtn.addEventListener('click', () => {
-  stopListening()
+  stopListeningMessages()
+  stopListeningChats()
   logout()
-})
-
-startChatBtn.addEventListener('click', async () => {
-  const otherUid = otherUidInput.value.trim()
-  if (!otherUid || !currentUser) return
-
-  stopListening()
-  clearMessages()
-
-  activeChatId = await createChat(currentUser.uid, otherUid)
-  showMessages(activeChatId)
-
-  unsubscribeMessages = listenMessages(activeChatId, (messages) => {
-    clearMessages()
-    messages.forEach(msg => {
-      appendMessage(msg.text, msg.senderId === currentUser.uid)
-    })
-  })
 })
 
 sendBtn.addEventListener('click', async () => {
@@ -117,15 +120,30 @@ messageInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') sendBtn.click()
 })
 
-onAuthChange((user) => {
+onAuthChange(async (user) => {
   currentUser = user
   if (user) {
     setUserInfo(user.email)
     showChatView()
-    stopListening()
     hideMessages()
+
+    const users = await getAllUsers()
+    userMap = Object.fromEntries(users.map(u => [u.uid, u]))
+    renderUserList(users, user.uid, async (selectedUser) => {
+      const chatId = await getOrCreateChat(user.uid, selectedUser.uid)
+      const title = selectedUser.displayName || selectedUser.email
+      openChat(chatId, title)
+    })
+
+    stopListeningChats()
+    unsubscribeChats = listenUserChats(user.uid, (chats) => {
+      renderChatList(chats, userMap, user.uid, (chat, title) => {
+        openChat(chat.id, title)
+      })
+    })
   } else {
+    stopListeningMessages()
+    stopListeningChats()
     showAuthView()
-    stopListening()
   }
 })

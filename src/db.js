@@ -1,5 +1,5 @@
 import {
-  getFirestore, doc, setDoc, getDoc, addDoc, getDocs,
+  getFirestore, doc, setDoc, getDoc, addDoc, getDocs, updateDoc,
   collection, query, where, orderBy, onSnapshot, serverTimestamp,
 } from 'firebase/firestore'
 import app from './firebase.js'
@@ -20,8 +20,14 @@ export function createUserProfile(uid, data) {
   })
 }
 
+export function getAllUsers() {
+  return getDocs(collection(db, 'users')).then(snap =>
+    snap.docs.map(d => ({ uid: d.id, ...d.data() }))
+  )
+}
+
 // Deterministic chatId: sorted UIDs joined by '_' → same chat always found
-export async function createChat(uid1, uid2) {
+export async function getOrCreateChat(uid1, uid2) {
   const chatId = [uid1, uid2].sort().join('_')
   const ref = doc(db, 'chats', chatId)
   const existing = await getDoc(ref)
@@ -35,17 +41,26 @@ export async function createChat(uid1, uid2) {
   return chatId
 }
 
-export async function getUserChats(uid) {
-  const q = query(collection(db, 'chats'), where('members', 'array-contains', uid))
-  const snap = await getDocs(q)
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
+export function listenUserChats(uid, callback) {
+  const q = query(
+    collection(db, 'chats'),
+    where('members', 'array-contains', uid),
+    orderBy('updatedAt', 'desc')
+  )
+  return onSnapshot(q, snap => {
+    callback(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+  })
 }
 
-export function sendMessage(chatId, senderId, text) {
-  return addDoc(collection(db, 'chats', chatId, 'messages'), {
+export async function sendMessage(chatId, senderId, text) {
+  await addDoc(collection(db, 'chats', chatId, 'messages'), {
     text,
     senderId,
     createdAt: serverTimestamp(),
+  })
+  await updateDoc(doc(db, 'chats', chatId), {
+    lastMessage: text,
+    updatedAt: serverTimestamp(),
   })
 }
 
