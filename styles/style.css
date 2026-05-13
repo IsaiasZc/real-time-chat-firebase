@@ -217,3 +217,11 @@ body {
 
 .bubble-own { background: #007bff; color: white; border-bottom-right-radius: 4px; }
 .bubble-other { background: #e9ecef; color: #000; border-bottom-left-radius: 4px; }
+
+.msg-time {
+  display: block;
+  font-size: 10px;
+  opacity: 0.65;
+  margin-top: 3px;
+  text-align: right;
+}

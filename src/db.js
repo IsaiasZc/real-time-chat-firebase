@@ -65,9 +65,12 @@ export async function sendMessage(chatId, senderId, text) {
 }
 
 // Returns unsubscribe function — call it to stop listening
+// Uses docChanges() to only process new/modified/removed docs instead of full list
 export function listenMessages(chatId, callback) {
   const q = query(collection(db, 'chats', chatId, 'messages'), orderBy('createdAt'))
   return onSnapshot(q, (snap) => {
-    callback(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+    snap.docChanges().forEach(change => {
+      callback({ type: change.type, msg: { id: change.doc.id, ...change.doc.data() } })
+    })
   })
 }

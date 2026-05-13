@@ -34,12 +34,19 @@ export function hideMessages() {
   messagesList.innerHTML = ''
 }
 
-export function appendMessage(text, isOwn) {
+export function appendMessage(text, isOwn, timestamp) {
   const row = document.createElement('div')
   row.className = `msg-row ${isOwn ? 'msg-own' : 'msg-other'}`
   const bubble = document.createElement('span')
   bubble.className = `bubble ${isOwn ? 'bubble-own' : 'bubble-other'}`
   bubble.textContent = text
+  if (timestamp) {
+    const time = document.createElement('span')
+    time.className = 'msg-time'
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp)
+    time.textContent = new Intl.DateTimeFormat('es', { hour: '2-digit', minute: '2-digit', hour12: false }).format(date)
+    bubble.appendChild(time)
+  }
   row.appendChild(bubble)
   messagesList.appendChild(row)
   messagesList.scrollTop = messagesList.scrollHeight

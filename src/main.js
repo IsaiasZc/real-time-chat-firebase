@@ -64,11 +64,10 @@ function openChat(chatId, title) {
   clearMessages()
   activeChatId = chatId
   showMessages(title)
-  unsubscribeMessages = listenMessages(chatId, (messages) => {
-    clearMessages()
-    messages.forEach(msg => {
-      appendMessage(msg.text, msg.senderId === currentUser.uid)
-    })
+  unsubscribeMessages = listenMessages(chatId, ({ type, msg }) => {
+    if (type === 'added') {
+      appendMessage(msg.text, msg.senderId === currentUser.uid, msg.createdAt)
+    }
   })
 }
 
