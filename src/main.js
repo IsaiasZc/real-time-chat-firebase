@@ -5,12 +5,13 @@
 // 4. Click user → getOrCreateChat → listenMessages → appendMessage
 // 5. sendMessage → Firestore → onSnapshot → UI updates
 
-import { register, login, logout, onAuthChange } from './auth.js'
+import { register, login, logout, onAuthChange, setDisplayName } from './auth.js'
 import { createUserProfile, getAllUsers, getOrCreateChat, listenUserChats, sendMessage, listenMessages } from './db.js'
-import { showAuthView, showChatView, setUserInfo, showMessages, hideMessages, appendMessage, clearMessages, renderUserList, renderChatList } from './ui.js'
+import { showAuthView, showChatView, setUserInfo, showMessages, hideMessages, appendMessage, clearMessages, renderUserList, renderChatList, showChatsEmptyState } from './ui.js'
 
 const emailInput = document.getElementById('email')
 const passwordInput = document.getElementById('password')
+const displayNameInput = document.getElementById('display-name')
 const loginBtn = document.getElementById('btn-login')
 const registerBtn = document.getElementById('btn-register')
 const logoutBtn = document.getElementById('btn-logout')
@@ -66,7 +67,8 @@ function openChat(chatId, title) {
   showMessages(title)
   unsubscribeMessages = listenMessages(chatId, ({ type, msg }) => {
     if (type === 'added') {
-      appendMessage(msg.text, msg.senderId === currentUser.uid, msg.createdAt)
+      const senderName = userMap[msg.senderId]?.displayName || userMap[msg.senderId]?.email || msg.senderId
+      appendMessage(msg.text, msg.senderId === currentUser.uid, msg.createdAt, senderName)
     }
   })
 }
@@ -94,7 +96,9 @@ registerBtn.addEventListener('click', async () => {
   setLoading(registerBtn, true)
   try {
     const { user } = await register(email, password)
-    await createUserProfile(user.uid, { email: user.email })
+    const displayName = displayNameInput.value.trim() || email
+    await setDisplayName(user, displayName)
+    await createUserProfile(user.uid, { email: user.email, displayName })
   } catch (err) {
     showError(err.code)
   } finally {
@@ -136,9 +140,13 @@ onAuthChange(async (user) => {
 
     stopListeningChats()
     unsubscribeChats = listenUserChats(user.uid, (chats) => {
-      renderChatList(chats, userMap, user.uid, (chat, title) => {
-        openChat(chat.id, title)
-      })
+      if (chats.length === 0) {
+        showChatsEmptyState()
+      } else {
+        renderChatList(chats, userMap, user.uid, (chat, title) => {
+          openChat(chat.id, title)
+        })
+      }
     })
   } else {
     stopListeningMessages()

@@ -34,12 +34,21 @@ export function hideMessages() {
   messagesList.innerHTML = ''
 }
 
-export function appendMessage(text, isOwn, timestamp) {
+export function appendMessage(text, isOwn, timestamp, senderName) {
   const row = document.createElement('div')
   row.className = `msg-row ${isOwn ? 'msg-own' : 'msg-other'}`
   const bubble = document.createElement('span')
   bubble.className = `bubble ${isOwn ? 'bubble-own' : 'bubble-other'}`
-  bubble.textContent = text
+  if (!isOwn && senderName) {
+    const name = document.createElement('span')
+    name.className = 'msg-sender'
+    name.textContent = senderName
+    bubble.appendChild(name)
+  }
+  const msgText = document.createElement('span')
+  msgText.className = 'msg-text'
+  msgText.textContent = text
+  bubble.appendChild(msgText)
   if (timestamp) {
     const time = document.createElement('span')
     time.className = 'msg-time'
@@ -67,6 +76,10 @@ export function renderUserList(users, currentUid, onSelect) {
       item.addEventListener('click', () => onSelect(user))
       usersList.appendChild(item)
     })
+}
+
+export function showChatsEmptyState() {
+  chatsList.innerHTML = '<div class="chats-empty">Sin conversaciones aún.<br>Busca un usuario para empezar.</div>'
 }
 
 export function renderChatList(chats, userMap, currentUid, onSelect) {

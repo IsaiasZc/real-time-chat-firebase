@@ -1,4 +1,4 @@
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'firebase/auth'
 import app from './firebase.js'
 
 const auth = getAuth(app)
@@ -17,4 +17,8 @@ export function logout() {
 
 export function onAuthChange(callback) {
   return onAuthStateChanged(auth, callback)
+}
+
+export function setDisplayName(user, displayName) {
+  return updateProfile(user, { displayName })
 }
