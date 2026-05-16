@@ -1,58 +1,69 @@
-# Firebase Chat
+# Overview
 
-A real-time chat app built with Firebase as part of CSE 310 at BYU-Idaho.
+One of the most useful skills in software development today is knowing how to work with cloud databases. They offer a fast and scalable way to store data without managing your own infrastructure, so you can focus on building the actual app. To learn how this works in practice, I decided to build a simple chat application using Firebase.
 
-**Live demo:** https://fir-chat-faa3a.web.app
+This is a real-time chat app where users can sign up, log in, and talk with other users. Authentication uses email and password, and both user information and conversations are stored in Firestore. The app works from any browser, and messages appear instantly — no page refresh needed.
 
----
+**To use it**: register an account at the live URL, pick any user from the list, and start chatting. Messages show the sender's name and a timestamp.
 
-## What it does
+My goal was to understand how cloud databases fit into a real web app — and how Firebase tools like authentication, Firestore, and hosting work together. I also wanted to practice organizing JavaScript code in modules without using a framework.
 
-- Register and log in with email and password
-- See a list of all registered users
-- Start a 1-on-1 conversation with any user
-- Send and receive messages in real time
-- Messages show the sender's name and timestamp
+[Firebase Demo Video](https://youtu.be/sCditsf1dA4)
+[Live Demo](https://fir-chat-faa3a.web.app)
 
----
+# Cloud Database
 
-## Built with
+This app uses **Firebase Firestore** — a NoSQL document database hosted on Google. Firestore supports real-time listeners, meaning the UI updates automatically whenever data changes in the database, without to do any manual fetch calls.
 
-- Vanilla JavaScript (no framework)
-- Vite
-- Firebase Authentication
-- Firebase Firestore
-- Firebase Hosting
+**Database structure:**
 
----
+```
+users/{uid}
+    displayName: string
+    email: string
+    createdAt: timestamp
 
-## Run locally
+chats/{chatId}
+    members: [uid1, uid2]
+    lastMessage: string
+    updatedAt: timestamp
 
-```bash
-pnpm install
-pnpm dev
+chats/{chatId}/messages/{msgId}
+    text: string
+    senderId: uid
+    createdAt: serverTimestamp()
 ```
 
-You need a `.env` file with your Firebase config. See `.env.example` for the required variables.
+Each chat document stores the two participant UIDs. Messages are a subcollection under their parent chat, ordered by `createdAt` using Firestore's `serverTimestamp()` to use consistent ordering across clients.
 
----
+# Development Environment
 
-## Deploy to Firebase Hosting
+- **Editor:** Visual Studio Code
+- **Version control:** Git / GitHub
+- **Package manager:** pnpm
+- **Build tool:** Vite — handles env variable injection and bundles output to `public/` for Firebase Hosting
+- **Deployment:** Firebase CLI (`firebase deploy`)
 
-**Prerequisites:** Firebase CLI installed (`npm install -g firebase-tools`) and logged in (`firebase login`).
+**Language and libraries:**
 
-```bash
-# 1. Build
-pnpm build
+- Vanilla JavaScript (ES modules, no framework)
+- Firebase SDK v12 (modular) — `firebase/auth`, `firebase/firestore`, `firebase/app`
+- Basecoat CSS for minimal styling
+- Vite for local dev server and production build
 
-# 2. Deploy
-firebase deploy
-```
+# Useful Websites
 
-The build outputs to `public/`, which Firebase Hosting serves. The live URL is shown at the end of the deploy command.
+- [Firebase Documentation](https://firebase.google.com/docs)
+- [Firestore Get Started](https://firebase.google.com/docs/firestore/quickstart)
+- [Firebase Auth Guide](https://firebase.google.com/docs/auth/web/start)
+- [Vite Documentation](https://vitejs.dev/guide/)
+- [MDN Web Docs — JavaScript Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
 
----
+# Future Work
 
-## What I learned
-
-This project helped me understand how Firebase works as a backend: authentication, database, security rules, and hosting — all without writing a server. The hardest part was learning how Firestore queries and real-time listeners work together.
+- Add group chat support (more than two members per chat)
+- Show online/offline presence indicators for each user
+- Support image and file attachments in messages
+- Add message read receipts
+- Improve Firestore security rules to validate message content server-side
+- Fix UI bugs and add loading states for better UX
