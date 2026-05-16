@@ -53,7 +53,7 @@ export function appendMessage(text, isOwn, timestamp, senderName) {
     const time = document.createElement('span')
     time.className = 'msg-time'
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp)
-    time.textContent = new Intl.DateTimeFormat('es', { hour: '2-digit', minute: '2-digit', hour12: false }).format(date)
+    time.textContent = new Intl.DateTimeFormat('en', { hour: '2-digit', minute: '2-digit', hour12: false }).format(date)
     bubble.appendChild(time)
   }
   row.appendChild(bubble)
@@ -79,7 +79,7 @@ export function renderUserList(users, currentUid, onSelect) {
 }
 
 export function showChatsEmptyState() {
-  chatsList.innerHTML = '<div class="chats-empty">Sin conversaciones aún.<br>Busca un usuario para empezar.</div>'
+  chatsList.innerHTML = '<div class="chats-empty">No conversations yet.<br>Select a user to start chatting.</div>'
 }
 
 export function renderChatList(chats, userMap, currentUid, onSelect) {
@@ -98,7 +98,7 @@ export function renderChatList(chats, userMap, currentUid, onSelect) {
 
     const lastEl = document.createElement('div')
     lastEl.className = 'chat-item-last'
-    lastEl.textContent = chat.lastMessage || 'Sin mensajes'
+    lastEl.textContent = chat.lastMessage || 'No messages yet'
 
     item.appendChild(nameEl)
     item.appendChild(lastEl)

@@ -26,7 +26,7 @@ export function getAllUsers() {
   )
 }
 
-// Deterministic chatId: sorted UIDs joined by '_' → same chat always found
+// Deterministic chatId: sorted UIDs joined by '_' = same chat always found
 export async function getOrCreateChat(uid1, uid2) {
   const chatId = [uid1, uid2].sort().join('_')
   const ref = doc(db, 'chats', chatId)

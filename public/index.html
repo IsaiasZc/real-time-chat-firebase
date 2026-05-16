@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es" class="theme-claude dark">
+<html lang="en" class="theme-claude dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Firebase Chat</title>
-    <script type="module" crossorigin src="/assets/index-O8as5fqY.js"></script>
+    <script type="module" crossorigin src="/assets/index-B0v4NZ4t.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-Bcbele5n.css">
   </head>
   <body>
@@ -12,11 +12,11 @@
       <div class="auth-card card grid gap-3">
         <h2>Firebase Chat</h2>
         <input class="input" id="email" type="email" placeholder="Email" />
-        <input class="input" id="password" type="password" placeholder="Contraseña" />
-        <input class="input" id="display-name" type="text" placeholder="Nombre (solo para registro)" />
+        <input class="input" id="password" type="password" placeholder="Password" />
+        <input class="input" id="display-name" type="text" placeholder="Display name (only for registration)" />
         <div class="auth-buttons">
-          <button class="btn-primary" id="btn-login">Entrar</button>
-          <button class="btn-outline" id="btn-register">Registrar</button>
+          <button class="btn-primary" id="btn-login">Log in</button>
+          <button class="btn-outline" id="btn-register">Register</button>
         </div>
         <p id="error-msg"></p>
       </div>
@@ -26,28 +26,28 @@
       <aside id="sidebar">
         <div id="user-info">
           <span id="user-display"></span>
-          <button class="btn-sm-outline" id="btn-logout">Salir</button>
+          <button class="btn-sm-outline" id="btn-logout">Log out</button>
         </div>
         <div class="sidebar-section">
-          <div class="sidebar-label">Usuarios</div>
+          <div class="sidebar-label">Users</div>
           <div id="users-list"></div>
         </div>
         <div class="sidebar-section">
-          <div class="sidebar-label">Conversaciones</div>
+          <div class="sidebar-label">Conversations</div>
           <div id="chats-list"></div>
         </div>
       </aside>
 
       <main id="main-panel">
-        <div id="empty-state">Selecciona una conversación</div>
+        <div id="empty-state">Select a conversation</div>
         <div id="chat-section">
           <div id="chat-header">
             <span id="chat-title"></span>
           </div>
           <div id="messages-list"></div>
           <div id="send-row">
-            <input class="input" id="message-input" type="text" placeholder="Escribe un mensaje..." />
-            <button class="btn-primary" id="btn-send">Enviar</button>
+            <input class="input" id="message-input" type="text" placeholder="Type a message..." />
+            <button class="btn-primary" id="btn-send">Send</button>
           </div>
         </div>
       </main>

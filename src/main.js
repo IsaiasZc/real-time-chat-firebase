@@ -20,16 +20,16 @@ const messageInput = document.getElementById('message-input')
 const sendBtn = document.getElementById('btn-send')
 
 const ERROR_MESSAGES = {
-  'auth/invalid-credential': 'Email o contraseña incorrectos.',
-  'auth/email-already-in-use': 'Email ya registrado.',
-  'auth/invalid-email': 'Email inválido.',
-  'auth/weak-password': 'Contraseña muy débil (mínimo 6 caracteres).',
-  'auth/user-not-found': 'Usuario no encontrado.',
-  'auth/wrong-password': 'Contraseña incorrecta.',
+  'auth/invalid-credential': 'Incorrect email or password.',
+  'auth/email-already-in-use': 'Email already registered.',
+  'auth/invalid-email': 'Invalid email.',
+  'auth/weak-password': 'Password too weak (minimum 6 characters).',
+  'auth/user-not-found': 'User not found.',
+  'auth/wrong-password': 'Incorrect password.',
 }
 
 function showError(code) {
-  errorMsg.textContent = ERROR_MESSAGES[code] ?? 'Error desconocido. Intenta de nuevo.'
+  errorMsg.textContent = ERROR_MESSAGES[code] ?? 'Unknown error. Please try again.'
 }
 
 function clearError() {
