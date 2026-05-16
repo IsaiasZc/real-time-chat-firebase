@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="theme-claude">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Firebase Chat</title>
-    <script type="module" crossorigin src="/assets/index-Cw8wdeoU.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-1PNmnjty.css">
+    <script type="module" crossorigin src="/assets/index-CyskVjUY.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-E84w-iLI.css">
   </head>
   <body>
     <div id="auth-view">
-      <div class="auth-card">
+      <div class="auth-card card grid gap-3">
         <h2>Firebase Chat</h2>
-        <input id="email" type="email" placeholder="Email" />
-        <input id="password" type="password" placeholder="Contraseña" />
-        <input id="display-name" type="text" placeholder="Nombre (solo para registro)" />
+        <input class="input" id="email" type="email" placeholder="Email" />
+        <input class="input" id="password" type="password" placeholder="Contraseña" />
+        <input class="input" id="display-name" type="text" placeholder="Nombre (solo para registro)" />
         <div class="auth-buttons">
-          <button id="btn-login">Entrar</button>
-          <button id="btn-register">Registrar</button>
+          <button class="btn-primary" id="btn-login">Entrar</button>
+          <button class="btn-outline" id="btn-register">Registrar</button>
         </div>
         <p id="error-msg"></p>
       </div>
@@ -26,7 +26,7 @@
       <aside id="sidebar">
         <div id="user-info">
           <span id="user-display"></span>
-          <button id="btn-logout">Salir</button>
+          <button class="btn-sm-outline" id="btn-logout">Salir</button>
         </div>
         <div class="sidebar-section">
           <div class="sidebar-label">Usuarios</div>
@@ -46,8 +46,8 @@
           </div>
           <div id="messages-list"></div>
           <div id="send-row">
-            <input id="message-input" type="text" placeholder="Escribe un mensaje..." />
-            <button id="btn-send">Enviar</button>
+            <input class="input" id="message-input" type="text" placeholder="Escribe un mensaje..." />
+            <button class="btn-primary" id="btn-send">Enviar</button>
           </div>
         </div>
       </main>
