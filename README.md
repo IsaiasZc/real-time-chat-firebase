@@ -37,6 +37,22 @@ You need a `.env` file with your Firebase config. See `.env.example` for the req
 
 ---
 
+## Deploy to Firebase Hosting
+
+**Prerequisites:** Firebase CLI installed (`npm install -g firebase-tools`) and logged in (`firebase login`).
+
+```bash
+# 1. Build
+pnpm build
+
+# 2. Deploy
+firebase deploy
+```
+
+The build outputs to `public/`, which Firebase Hosting serves. The live URL is shown at the end of the deploy command.
+
+---
+
 ## What I learned
 
 This project helped me understand how Firebase works as a backend: authentication, database, security rules, and hosting — all without writing a server. The hardest part was learning how Firestore queries and real-time listeners work together.
